@@ -42,10 +42,18 @@ for i in sorted(ls):
 def croped_images_to_pdf():
 	os.chdir("cropped_files/")
 	ls = sorted(os.listdir())
-	with open("name.pdf","wb") as f:
+	with open(file_name + "_cropped.pdf","wb") as f:
 	    f.write(img2pdf.convert(ls[:-1]))
+	os.system("mv "+ file_name + "_cropped.pdf ../../")
+	os.chdir("../../")
 	os.system('gio open name.pdf')
 croped_images_to_pdf()
+		  
+def remove_pics_folders():
+	a = input("Are you sure to remove Picutres folders created for cropping\n[yes\no]\n")
+	if a.lower() == 'yes':
+		os.system("rm -r -f newFolderForPictures/")
+
 # To convert PDF to Image you can use pdftoppm to convert a PDF to a PNG:
 # pdftoppm input.pdf outputname -png
 
