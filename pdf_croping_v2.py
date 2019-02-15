@@ -3,7 +3,7 @@ import os
 import img2pdf
 from PIL import Image
 file_name = input("Enter your PDF file name without .pdf\n")
-def to_pdf(file_name):
+def to_png(file_name):
 	try:
 		os.removedirs('newFolderForPictures/')
 	except:
@@ -11,31 +11,40 @@ def to_pdf(file_name):
 	os.mkdir("newFolderForPictures")
 	os.chdir("newFolderForPictures/")
 	os.system("pdftoppm ../" +  file_name + ".pdf outputname -png -rx 600 -ry 600")
-to_pdf(file_name)
+to_png(file_name)
 
-def crop(file_name):
-	os.chdir("/home/amir/croping/newFolderForPictures/")
-    original = Image.open(file_name)
-    cropped_example = original.crop((370, 400, 3200, 5100))
-    # first argument : left me kahan sy shuru karna h
-    # second arugment: upper me kahan sy start karna h
-    # third argument: right me kahan tak jana h
-    # fourth argument: bottom me kahan tak jana h
-    cropped_example.save(file_name.split('-')[1].replace(".png", "")+'_cropped.jpg')
 
 ls = os.listdir()
+try:
+	os.removedirs('cropped_files')
+	os.mkdir("cropped_files")
+except:
+	os.mkdir("cropped_files")
+def crop(file_name):
+	original = Image.open(file_name)
+	cropped_example = original.crop((370, 400, 3200, 5100))
+	# first argument : left me kahan sy shuru karna h
+	# second arugment: upper me kahan sy start karna h
+	# third argument: right me kahan tak jana h
+	# fourth argument: bottom me kahan tak jana h
+	os.chdir("cropped_files/")
+	cropped_example.save(file_name.split('-')[1].replace(".png", "")+'_cropped.jpg')
+	os.chdir("../")
+
 for i in sorted(ls):
-	if i.endswith(".png"):
+	if i.endswith(".png"):	
 		crop(i)
 
 
+	
+
 
 def croped_images_to_pdf():
-	ls = sorted([i for i in ls if 'cropped' in i])
+	os.chdir("cropped_files/")
+	ls = sorted(os.listdir())
 	with open("name.pdf","wb") as f:
 	    f.write(img2pdf.convert(ls[:-1]))
 	os.system('gio open name.pdf')
-
 croped_images_to_pdf()
 # To convert PDF to Image you can use pdftoppm to convert a PDF to a PNG:
 # pdftoppm input.pdf outputname -png
